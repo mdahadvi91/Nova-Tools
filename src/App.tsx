@@ -14,11 +14,11 @@ import { initGlobalAnalyticsListeners } from './lib/analytics';
 import { HomePage } from './components/home/HomePage';
 import { CategoryPage } from './components/pages/CategoryPage';
 import {
-  PrivacyPolicyPage,
-  TermsPage,
-  AboutPage,
-  ContactPage,
-  DisclaimerPage,
+PrivacyPolicyPage,
+TermsPage,
+AboutPage,
+ContactPage,
+DisclaimerPage,
 } from './components/pages/PolicyPages';
 import { NotFoundPage } from './components/pages/NotFoundPage';
 
@@ -56,240 +56,248 @@ import { FinanceCalcTools } from './components/tools/calculators/FinanceCalcTool
 import { UnitConverterTool } from './components/tools/calculators/UnitConverterTool';
 
 const MainContent: React.FC = () => {
-  const { navState, customBg, defaultBgTimestamp } = useApp();
+const { navState, customBg, defaultBgTimestamp } = useApp();
 
-  // Initialize global click & download analytics listeners
-  React.useEffect(() => {
-    const cleanup = initGlobalAnalyticsListeners();
-    return cleanup;
-  }, []);
+React.useEffect(() => {
+const cleanup = initGlobalAnalyticsListeners();
+return cleanup;
+}, []);
 
-  // Helper to render active tool component
-  const renderToolComponent = (toolId: string) => {
-    switch (toolId) {
-      // QR Tools
-      case 'photo-qr-overlay':
-      case 'url-link-qr':
-      case 'wifi-qr':
-      case 'whatsapp-qr':
-        return <PhotoQROverlayTool />;
+const renderToolComponent = (toolId: string) => {
+switch (toolId) {
+// QR Tools
+case 'photo-qr-overlay':
+case 'url-link-qr':
+case 'wifi-qr':
+case 'whatsapp-qr':
+return <PhotoQROverlayTool />;
 
-      case 'vcard-qr':
-      case 'visiting-card':
-        return <VCardBusinessCardTool />;
+  case 'vcard-qr':
+  case 'visiting-card':
+    return <VCardBusinessCardTool />;
 
-      case 'qr-designer':
-        return <UnifiedUrlQRTool />;
+  case 'qr-designer':
+    return <UnifiedUrlQRTool />;
 
-      case 'batch-qr':
-        return <BatchQRTool />;
+  case 'batch-qr':
+    return <BatchQRTool />;
 
-      case 'qr-scanner':
-        return <QRScannerTool />;
+  case 'qr-scanner':
+    return <QRScannerTool />;
 
-      // Image Tools
-      case 'jpg-to-png':
-        return <ImageConverterTool forcedTargetFormat="png" />;
+  // Image Tools
+  case 'jpg-to-png':
+    return <ImageConverterTool forcedTargetFormat="png" />;
 
-      case 'png-to-jpg':
-        return <ImageConverterTool forcedTargetFormat="jpeg" />;
+  case 'png-to-jpg':
+    return <ImageConverterTool forcedTargetFormat="jpeg" />;
 
-      case 'jpg-to-webp':
-        return <ImageConverterTool forcedTargetFormat="webp" />;
+  case 'jpg-to-webp':
+    return <ImageConverterTool forcedTargetFormat="webp" />;
 
-      case 'webp-to-jpg':
-        return <ImageConverterTool forcedTargetFormat="jpeg" />;
+  case 'webp-to-jpg':
+    return <ImageConverterTool forcedTargetFormat="jpeg" />;
 
-      case 'png-to-webp':
-        return <ImageConverterTool forcedTargetFormat="webp" />;
+  case 'png-to-webp':
+    return <ImageConverterTool forcedTargetFormat="webp" />;
 
-      case 'webp-to-png':
-        return <ImageConverterTool forcedTargetFormat="png" />;
+  case 'webp-to-png':
+    return <ImageConverterTool forcedTargetFormat="png" />;
 
-      case 'image-converter':
-        return <ImageConverterTool />;
+  case 'image-converter':
+    return <ImageConverterTool />;
 
-      case 'image-compressor':
-        return <ImageCompressorTool />;
+  case 'image-compressor':
+    return <ImageCompressorTool />;
 
-      case 'image-resizer':
-        return <ImageResizerTool />;
+  case 'image-resizer':
+    return <ImageResizerTool />;
 
-      case 'image-cropper':
-      case 'image-rotator':
-        return <ImageCropRotateTool />;
+  case 'image-cropper':
+  case 'image-rotator':
+    return <ImageCropRotateTool />;
 
-      case 'passport-photo-maker':
-        return <PassportPhotoTool />;
+  case 'passport-photo-maker':
+    return <PassportPhotoTool />;
 
-      // PDF Tools
-      case 'image-to-pdf':
-        return <ImagesToPdfTool />;
+  // PDF Tools
+  case 'image-to-pdf':
+    return <ImagesToPdfTool />;
 
-      case 'pdf-merge':
-        return <MergePdfTool />;
+  case 'pdf-merge':
+    return <MergePdfTool />;
 
-      case 'pdf-split':
-      case 'pdf-page-manager':
-        return <SplitPdfTool />;
+  case 'pdf-split':
+  case 'pdf-page-manager':
+    return <SplitPdfTool />;
 
-      case 'pdf-watermark':
-        return <WatermarkPdfTool />;
+  case 'pdf-watermark':
+    return <WatermarkPdfTool />;
 
-      case 'pdf-rotate':
-      case 'pdf-password':
-        return <PageNumberPdfTool />;
+  /*
+   * IMPORTANT:
+   * pdf-rotate and pdf-password are intentionally NOT mapped
+   * to PageNumberPdfTool.
+   *
+   * PageNumberPdfTool only inserts page numbers. Mapping unrelated
+   * tools to it creates a misleading tool experience.
+   *
+   * These IDs remain in tools.ts and will safely fall through to
+   * NotFoundPage until their dedicated working implementations exist.
+   */
 
-      // Career Tools
-      case 'resume-builder':
-      case 'cover-letter-builder':
-      case 'business-card':
-        return <ResumeMakerTool />;
+  // Career Tools
+  case 'resume-builder':
+  case 'cover-letter-builder':
+  case 'business-card':
+    return <ResumeMakerTool />;
 
-      case 'resume-analyzer':
-      case 'job-description-analyzer':
-        return <AtsCheckerTool />;
+  case 'resume-analyzer':
+  case 'job-description-analyzer':
+    return <AtsCheckerTool />;
 
-      case 'job-search-tracker':
-        return <JobTrackerTool />;
+  case 'job-search-tracker':
+    return <JobTrackerTool />;
 
-      // Utility & Developer Tools
-      case 'word-counter':
-        return <TextTools toolType="counter" />;
+  // Utility & Developer Tools
+  case 'word-counter':
+    return <TextTools toolType="counter" />;
 
-      case 'case-converter':
-        return <TextTools toolType="case" />;
+  case 'case-converter':
+    return <TextTools toolType="case" />;
 
-      case 'text-cleaner':
-        return <TextTools toolType="cleaner" />;
+  case 'text-cleaner':
+    return <TextTools toolType="cleaner" />;
 
-      case 'markdown-preview':
-        return <TextTools toolType="markdown" />;
+  case 'markdown-preview':
+    return <TextTools toolType="markdown" />;
 
-      case 'json-formatter':
-        return <DevTools toolType="json" />;
+  case 'json-formatter':
+    return <DevTools toolType="json" />;
 
-      case 'base64-converter':
-        return <DevTools toolType="base64" />;
+  case 'base64-converter':
+    return <DevTools toolType="base64" />;
 
-      case 'url-encoder':
-        return <DevTools toolType="url" />;
+  case 'url-encoder':
+    return <DevTools toolType="url" />;
 
-      case 'timestamp-converter':
-        return <DevTools toolType="timestamp" />;
+  case 'timestamp-converter':
+    return <DevTools toolType="timestamp" />;
 
-      case 'password-generator':
-        return <DevTools toolType="password" />;
+  case 'password-generator':
+    return <DevTools toolType="password" />;
 
-      case 'unit-converter':
-        return <UnitConverterTool />;
+  case 'unit-converter':
+    return <UnitConverterTool />;
 
-      // Design Tools
-      case 'color-picker':
-        return <ColorTools toolType="contrast" />;
+  // Design Tools
+  case 'color-picker':
+    return <ColorTools toolType="contrast" />;
 
-      case 'css-gradient':
-        return <ColorTools toolType="palette" />;
+  case 'css-gradient':
+    return <ColorTools toolType="palette" />;
 
-      case 'image-color-extractor':
-        return <ColorTools toolType="picker" />;
+  case 'image-color-extractor':
+    return <ColorTools toolType="picker" />;
 
-      // Calculators & Finance Tools
-      case 'loan-calculator':
-        return <FinanceCalcTools calcType="loan" />;
+  // Calculators & Finance Tools
+  case 'loan-calculator':
+    return <FinanceCalcTools calcType="loan" />;
 
-      case 'compound-interest':
-        return <FinanceCalcTools calcType="compound" />;
+  case 'compound-interest':
+    return <FinanceCalcTools calcType="compound" />;
 
-      case 'tip-calculator':
-        return <FinanceCalcTools calcType="tip" />;
+  case 'tip-calculator':
+    return <FinanceCalcTools calcType="tip" />;
 
-      case 'discount-calculator':
-        return <FinanceCalcTools calcType="discount" />;
+  case 'discount-calculator':
+    return <FinanceCalcTools calcType="discount" />;
 
-      case 'date-calculator':
-        return <FinanceCalcTools calcType="date" />;
+  case 'date-calculator':
+    return <FinanceCalcTools calcType="date" />;
 
-      default:
-        return <NotFoundPage attemptedSlug={toolId} />;
-    }
-  };
+  default:
+    return <NotFoundPage attemptedSlug={toolId} />;
+}
 
-  return (
-    <div className="min-h-screen flex flex-col relative text-slate-100 selection:bg-emerald-500 selection:text-white w-full max-w-full overflow-x-hidden">
-      {/* Background layer: preserve the existing custom/server background */}
-      <div
-        className="fixed inset-0 pointer-events-none z-0 bg-cover bg-center bg-no-repeat bg-[#060b09] transition-all duration-700 ease-in-out"
-        style={{
-          backgroundImage: customBg
-            ? `url(${customBg})`
-            : `url('/assets/background.jpg?v=${defaultBgTimestamp}')`,
-        }}
-      />
+};
 
-      <div className="fixed inset-0 app-bg-overlay pointer-events-none z-0" />
+return (
+<div className="min-h-screen flex flex-col relative text-slate-100 selection:bg-emerald-500 selection:text-white w-full max-w-full overflow-x-hidden">
+{/* Background layer: preserve the existing custom/server background */}
+<div
+className="fixed inset-0 pointer-events-none z-0 bg-cover bg-center bg-no-repeat bg-[#060b09] transition-all duration-700 ease-in-out"
+style={{
+backgroundImage: customBg
+? "url(${customBg})"
+: "url('/assets/background.jpg?v=${defaultBgTimestamp}')",
+}}
+/>
 
-      <div className="relative z-10 flex flex-col min-h-screen w-full max-w-full overflow-x-hidden pt-14 sm:pt-16">
-        <Header />
+  <div className="fixed inset-0 app-bg-overlay pointer-events-none z-0" />
 
-        <LeftSidebar />
+  <div className="relative z-10 flex flex-col min-h-screen w-full max-w-full overflow-x-hidden pt-14 sm:pt-16">
+    <Header />
 
-        <RightSidebar />
+    <LeftSidebar />
 
-        <SearchModal />
+    <RightSidebar />
 
-        <main className="flex-1 w-full max-w-7xl mx-auto px-2 sm:px-4 lg:px-8 py-3 sm:py-6 overflow-x-hidden">
-          {/* Router View */}
-          {navState.view === 'home' && <HomePage />}
+    <SearchModal />
 
-          {navState.view === 'category' && navState.category && (
-            <CategoryPage category={navState.category} />
-          )}
+    <main className="flex-1 w-full max-w-7xl mx-auto px-2 sm:px-4 lg:px-8 py-3 sm:py-6 overflow-x-hidden">
+      {/* Router View */}
+      {navState.view === 'home' && <HomePage />}
 
-          {navState.view === 'legal' && (
-            <>
-              {navState.legalPage === 'privacy' && <PrivacyPolicyPage />}
-              {navState.legalPage === 'terms' && <TermsPage />}
-              {navState.legalPage === 'about' && <AboutPage />}
-              {navState.legalPage === 'contact' && <ContactPage />}
-              {navState.legalPage === 'disclaimer' && <DisclaimerPage />}
-              {!navState.legalPage && <PrivacyPolicyPage />}
-            </>
-          )}
+      {navState.view === 'category' && navState.category && (
+        <CategoryPage category={navState.category} />
+      )}
 
-          {navState.view === 'tool' &&
-            navState.toolId &&
-            (() => {
-              const toolDef = TOOLS.find((t) => t.id === navState.toolId);
+      {navState.view === 'legal' && (
+        <>
+          {navState.legalPage === 'privacy' && <PrivacyPolicyPage />}
+          {navState.legalPage === 'terms' && <TermsPage />}
+          {navState.legalPage === 'about' && <AboutPage />}
+          {navState.legalPage === 'contact' && <ContactPage />}
+          {navState.legalPage === 'disclaimer' && <DisclaimerPage />}
+          {!navState.legalPage && <PrivacyPolicyPage />}
+        </>
+      )}
 
-              if (!toolDef) {
-                return <NotFoundPage attemptedSlug={navState.toolId} />;
-              }
+      {navState.view === 'tool' &&
+        navState.toolId &&
+        (() => {
+          const toolDef = TOOLS.find((t) => t.id === navState.toolId);
 
-              return (
-                <ToolWorkspace tool={toolDef}>
-                  {renderToolComponent(navState.toolId)}
-                </ToolWorkspace>
-              );
-            })()}
+          if (!toolDef) {
+            return <NotFoundPage attemptedSlug={navState.toolId} />;
+          }
 
-          {navState.view === '404' && (
-            <NotFoundPage attemptedSlug={navState.toolId} />
-          )}
-        </main>
+          return (
+            <ToolWorkspace tool={toolDef}>
+              {renderToolComponent(navState.toolId)}
+            </ToolWorkspace>
+          );
+        })()}
 
-        <Footer />
+      {navState.view === '404' && (
+        <NotFoundPage attemptedSlug={navState.toolId} />
+      )}
+    </main>
 
-        <CookieConsentBanner />
-      </div>
-    </div>
-  );
+    <Footer />
+
+    <CookieConsentBanner />
+  </div>
+</div>
+
+);
 };
 
 export default function App() {
-  return (
-    <AppProvider>
-      <MainContent />
-    </AppProvider>
-  );
+return (
+<AppProvider>
+<MainContent />
+</AppProvider>
+);
 }
