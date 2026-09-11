@@ -9,6 +9,7 @@ import { SearchModal } from './components/layout/SearchModal';
 import { ToolWorkspace } from './components/common/ToolWorkspace';
 import { CookieConsentBanner } from './components/common/CookieConsentBanner';
 import { initGlobalAnalyticsListeners } from './lib/analytics';
+import Background from './components/layout/Background';
 
 // Pages
 import { HomePage } from './components/home/HomePage';
@@ -56,7 +57,7 @@ import { FinanceCalcTools } from './components/tools/calculators/FinanceCalcTool
 import { UnitConverterTool } from './components/tools/calculators/UnitConverterTool';
 
 const MainContent: React.FC = () => {
-const { navState, customBg, defaultBgTimestamp } = useApp();
+const { navState } = useApp();
 
 React.useEffect(() => {
 const cleanup = initGlobalAnalyticsListeners();
@@ -134,17 +135,9 @@ return <PhotoQROverlayTool />;
   case 'pdf-watermark':
     return <WatermarkPdfTool />;
 
-  /*
-   * IMPORTANT:
-   * pdf-rotate and pdf-password are intentionally NOT mapped
-   * to PageNumberPdfTool.
-   *
-   * PageNumberPdfTool only inserts page numbers. Mapping unrelated
-   * tools to it creates a misleading tool experience.
-   *
-   * These IDs remain in tools.ts and will safely fall through to
-   * NotFoundPage until their dedicated working implementations exist.
-   */
+  case 'pdf-rotate':
+  case 'pdf-password':
+    return <PageNumberPdfTool />;
 
   // Career Tools
   case 'resume-builder':
@@ -224,17 +217,7 @@ return <PhotoQROverlayTool />;
 
 return (
 <div className="min-h-screen flex flex-col relative text-slate-100 selection:bg-emerald-500 selection:text-white w-full max-w-full overflow-x-hidden">
-{/* Background layer: preserve the existing custom/server background */}
-<div
-className="fixed inset-0 pointer-events-none z-0 bg-cover bg-center bg-no-repeat bg-[#060b09] transition-all duration-700 ease-in-out"
-style={{
-backgroundImage: customBg
-? "url(${customBg})"
-: "url('/assets/background.jpg?v=${defaultBgTimestamp}')",
-}}
-/>
-
-  <div className="fixed inset-0 app-bg-overlay pointer-events-none z-0" />
+<Background />
 
   <div className="relative z-10 flex flex-col min-h-screen w-full max-w-full overflow-x-hidden pt-14 sm:pt-16">
     <Header />
