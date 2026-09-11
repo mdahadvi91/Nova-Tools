@@ -56,7 +56,7 @@ import { FinanceCalcTools } from './components/tools/calculators/FinanceCalcTool
 import { UnitConverterTool } from './components/tools/calculators/UnitConverterTool';
 
 const MainContent: React.FC = () => {
-  const { navState } = useApp();
+  const { navState, customBg, defaultBgTimestamp } = useApp();
 
   // Initialize global click & download analytics listeners
   React.useEffect(() => {
@@ -67,7 +67,7 @@ const MainContent: React.FC = () => {
   // Helper to render active tool component
   const renderToolComponent = (toolId: string) => {
     switch (toolId) {
-      // QR Tools: Photo + QR Overlay master tool and vCard tool
+      // QR Tools
       case 'photo-qr-overlay':
       case 'url-link-qr':
       case 'wifi-qr':
@@ -87,7 +87,7 @@ const MainContent: React.FC = () => {
       case 'qr-scanner':
         return <QRScannerTool />;
 
-      // Image Tools: Strict Upload -> Preview -> Download flow
+      // Image Tools
       case 'jpg-to-png':
         return <ImageConverterTool forcedTargetFormat="png" />;
 
@@ -217,25 +217,25 @@ const MainContent: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col relative text-slate-100 selection:bg-emerald-500 selection:text-white w-full max-w-full overflow-x-hidden">
-      {/* Fixed site background.
-          Customer custom background uploads are intentionally disabled. */}
+      {/* Background layer: preserve the existing custom/server background */}
       <div
-        className="fixed inset-0 pointer-events-none z-0 bg-cover bg-center bg-no-repeat bg-[#060b09]"
+        className="fixed inset-0 pointer-events-none z-0 bg-cover bg-center bg-no-repeat bg-[#060b09] transition-all duration-700 ease-in-out"
         style={{
-          backgroundImage: "url('/assets/background.jpg')",
+          backgroundImage: customBg
+            ? `url(${customBg})`
+            : `url('/assets/background.jpg?v=${defaultBgTimestamp}')`,
         }}
-        aria-hidden="true"
       />
 
-      <div
-        className="fixed inset-0 app-bg-overlay pointer-events-none z-0"
-        aria-hidden="true"
-      />
+      <div className="fixed inset-0 app-bg-overlay pointer-events-none z-0" />
 
       <div className="relative z-10 flex flex-col min-h-screen w-full max-w-full overflow-x-hidden pt-14 sm:pt-16">
         <Header />
+
         <LeftSidebar />
+
         <RightSidebar />
+
         <SearchModal />
 
         <main className="flex-1 w-full max-w-7xl mx-auto px-2 sm:px-4 lg:px-8 py-3 sm:py-6 overflow-x-hidden">
@@ -279,6 +279,7 @@ const MainContent: React.FC = () => {
         </main>
 
         <Footer />
+
         <CookieConsentBanner />
       </div>
     </div>
