@@ -13,14 +13,19 @@ import { initGlobalAnalyticsListeners } from './lib/analytics';
 // Pages
 import { HomePage } from './components/home/HomePage';
 import { CategoryPage } from './components/pages/CategoryPage';
-import { PrivacyPolicyPage, TermsPage, AboutPage, ContactPage, DisclaimerPage } from './components/pages/PolicyPages';
+import {
+  PrivacyPolicyPage,
+  TermsPage,
+  AboutPage,
+  ContactPage,
+  DisclaimerPage,
+} from './components/pages/PolicyPages';
 import { NotFoundPage } from './components/pages/NotFoundPage';
 
 // QR Tools
 import { PhotoQROverlayTool } from './components/tools/qr/PhotoQROverlayTool';
 import { VCardBusinessCardTool } from './components/tools/qr/VCardBusinessCardTool';
 import { UnifiedUrlQRTool } from './components/tools/qr/UnifiedUrlQRTool';
-import { GenericQRTool } from './components/tools/qr/GenericQRTool';
 import { QRScannerTool } from './components/tools/qr/QRScannerTool';
 import { BatchQRTool } from './components/tools/qr/BatchQRTool';
 
@@ -51,7 +56,7 @@ import { FinanceCalcTools } from './components/tools/calculators/FinanceCalcTool
 import { UnitConverterTool } from './components/tools/calculators/UnitConverterTool';
 
 const MainContent: React.FC = () => {
-  const { navState, customBg, defaultBgTimestamp } = useApp();
+  const { navState } = useApp();
 
   // Initialize global click & download analytics listeners
   React.useEffect(() => {
@@ -68,51 +73,69 @@ const MainContent: React.FC = () => {
       case 'wifi-qr':
       case 'whatsapp-qr':
         return <PhotoQROverlayTool />;
+
       case 'vcard-qr':
       case 'visiting-card':
         return <VCardBusinessCardTool />;
+
       case 'qr-designer':
         return <UnifiedUrlQRTool />;
+
       case 'batch-qr':
         return <BatchQRTool />;
+
       case 'qr-scanner':
         return <QRScannerTool />;
 
       // Image Tools: Strict Upload -> Preview -> Download flow
       case 'jpg-to-png':
         return <ImageConverterTool forcedTargetFormat="png" />;
+
       case 'png-to-jpg':
         return <ImageConverterTool forcedTargetFormat="jpeg" />;
+
       case 'jpg-to-webp':
         return <ImageConverterTool forcedTargetFormat="webp" />;
+
       case 'webp-to-jpg':
         return <ImageConverterTool forcedTargetFormat="jpeg" />;
+
       case 'png-to-webp':
         return <ImageConverterTool forcedTargetFormat="webp" />;
+
       case 'webp-to-png':
         return <ImageConverterTool forcedTargetFormat="png" />;
+
       case 'image-converter':
         return <ImageConverterTool />;
+
       case 'image-compressor':
         return <ImageCompressorTool />;
+
       case 'image-resizer':
         return <ImageResizerTool />;
+
       case 'image-cropper':
       case 'image-rotator':
         return <ImageCropRotateTool />;
+
       case 'passport-photo-maker':
         return <PassportPhotoTool />;
 
       // PDF Tools
       case 'image-to-pdf':
         return <ImagesToPdfTool />;
+
       case 'pdf-merge':
         return <MergePdfTool />;
+
       case 'pdf-split':
       case 'pdf-page-manager':
         return <SplitPdfTool />;
+
       case 'pdf-watermark':
         return <WatermarkPdfTool />;
+
       case 'pdf-rotate':
       case 'pdf-password':
         return <PageNumberPdfTool />;
@@ -122,51 +145,68 @@ const MainContent: React.FC = () => {
       case 'cover-letter-builder':
       case 'business-card':
         return <ResumeMakerTool />;
+
       case 'resume-analyzer':
       case 'job-description-analyzer':
         return <AtsCheckerTool />;
+
       case 'job-search-tracker':
         return <JobTrackerTool />;
 
       // Utility & Developer Tools
       case 'word-counter':
         return <TextTools toolType="counter" />;
+
       case 'case-converter':
         return <TextTools toolType="case" />;
+
       case 'text-cleaner':
         return <TextTools toolType="cleaner" />;
+
       case 'markdown-preview':
         return <TextTools toolType="markdown" />;
+
       case 'json-formatter':
         return <DevTools toolType="json" />;
+
       case 'base64-converter':
         return <DevTools toolType="base64" />;
+
       case 'url-encoder':
         return <DevTools toolType="url" />;
+
       case 'timestamp-converter':
         return <DevTools toolType="timestamp" />;
+
       case 'password-generator':
         return <DevTools toolType="password" />;
+
       case 'unit-converter':
         return <UnitConverterTool />;
 
       // Design Tools
       case 'color-picker':
         return <ColorTools toolType="contrast" />;
+
       case 'css-gradient':
         return <ColorTools toolType="palette" />;
+
       case 'image-color-extractor':
         return <ColorTools toolType="picker" />;
 
       // Calculators & Finance Tools
       case 'loan-calculator':
         return <FinanceCalcTools calcType="loan" />;
+
       case 'compound-interest':
         return <FinanceCalcTools calcType="compound" />;
+
       case 'tip-calculator':
         return <FinanceCalcTools calcType="tip" />;
+
       case 'discount-calculator':
         return <FinanceCalcTools calcType="discount" />;
+
       case 'date-calculator':
         return <FinanceCalcTools calcType="date" />;
 
@@ -177,16 +217,20 @@ const MainContent: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col relative text-slate-100 selection:bg-emerald-500 selection:text-white w-full max-w-full overflow-x-hidden">
-      {/* Background layer: Uses customBg or server-side /assets/background.jpg */}
+      {/* Fixed site background.
+          Customer custom background uploads are intentionally disabled. */}
       <div
-        className="fixed inset-0 pointer-events-none z-0 bg-cover bg-center bg-no-repeat bg-[#060b09] transition-all duration-700 ease-in-out"
+        className="fixed inset-0 pointer-events-none z-0 bg-cover bg-center bg-no-repeat bg-[#060b09]"
         style={{
-          backgroundImage: customBg
-            ? `url(${customBg})`
-            : `url('/assets/background.jpg?v=${defaultBgTimestamp}')`,
+          backgroundImage: "url('/assets/background.jpg')",
         }}
+        aria-hidden="true"
       />
-      <div className="fixed inset-0 app-bg-overlay pointer-events-none z-0" />
+
+      <div
+        className="fixed inset-0 app-bg-overlay pointer-events-none z-0"
+        aria-hidden="true"
+      />
 
       <div className="relative z-10 flex flex-col min-h-screen w-full max-w-full overflow-x-hidden pt-14 sm:pt-16">
         <Header />
@@ -213,21 +257,25 @@ const MainContent: React.FC = () => {
             </>
           )}
 
-          {navState.view === 'tool' && navState.toolId && (
+          {navState.view === 'tool' &&
+            navState.toolId &&
             (() => {
               const toolDef = TOOLS.find((t) => t.id === navState.toolId);
+
               if (!toolDef) {
                 return <NotFoundPage attemptedSlug={navState.toolId} />;
               }
+
               return (
                 <ToolWorkspace tool={toolDef}>
                   {renderToolComponent(navState.toolId)}
                 </ToolWorkspace>
               );
-            })()
-          )}
+            })()}
 
-          {navState.view === '404' && <NotFoundPage attemptedSlug={navState.toolId} />}
+          {navState.view === '404' && (
+            <NotFoundPage attemptedSlug={navState.toolId} />
+          )}
         </main>
 
         <Footer />
