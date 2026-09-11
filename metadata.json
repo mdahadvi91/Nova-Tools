@@ -1,0 +1,6 @@
+{
+  "name": "Nova Tools",
+  "description": "Privacy-first online utility platform for image conversion, PDF processing, QR overlay, career tools, and developer utilities.",
+  "requestFramePermissions": ["camera"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

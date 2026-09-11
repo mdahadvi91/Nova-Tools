@@ -1,0 +1,14 @@
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Allow: /
+
+# Google AdSense Crawler
+User-agent: Mediapartners-Google
+Allow: /
+
+# Googlebot Image Crawler
+User-agent: Googlebot-Image
+Allow: /
+
+# Sitemap
+Sitemap: https://ais-dev-72zn4szbllai3tssiz5wni-294635045256.europe-west2.run.app/sitemap.xml
