@@ -1,10 +1,12 @@
 import express from 'express';
 import path from 'path';
-import fs from 'fs';
 import { GoogleGenAI } from '@google/genai';
 import dotenv from 'dotenv';
 import { createServer as createViteServer } from 'vite';
-import { generateSitemapXml, generateRobotsTxt } from './src/lib/sitemapGenerator';
+import {
+  generateSitemapXml,
+  generateRobotsTxt,
+} from './src/lib/sitemapGenerator';
 
 dotenv.config();
 
@@ -16,7 +18,6 @@ const SITE_ORIGIN = (
 ).replace(/\/+$/, '');
 
 const MAX_REQUEST_BODY = '15mb';
-const MAX_BACKGROUND_BYTES = 8 * 1024 * 1024;
 
 app.disable('x-powered-by');
 
@@ -136,183 +137,6 @@ app.get('/api/health', (req, res) => {
     hasGemini: !!process.env.GEMINI_API_KEY,
     timestamp: new Date().toISOString(),
   });
-});
-
-// -----------------------------------------------------------------------------
-// Default background
-// -----------------------------------------------------------------------------
-
-app.get('/api/default-background', (req, res) => {
-  const bgPath = path.join(
-    process.cwd(),
-    'public',
-    'assets',
-    'background.jpg'
-  );
-
-  const exists = fs.existsSync(bgPath);
-
-  let updatedAt = 0;
-
-  if (exists) {
-    try {
-      const stat = fs.statSync(bgPath);
-      updatedAt = stat.mtimeMs;
-    } catch {
-      updatedAt = 0;
-    }
-  }
-
-  res.json({
-    hasDefaultBg: exists,
-    url: exists
-      ? `/assets/background.jpg?v=${Math.floor(updatedAt)}`
-      : null,
-    updatedAt,
-  });
-});
-
-// Set uploaded photo as permanent site default background.
-//
-// Security:
-// This endpoint requires BACKGROUND_ADMIN_TOKEN.
-// The token must be supplied through the x-background-admin-token header.
-//
-// This prevents an unauthenticated visitor from writing arbitrary files
-// into the server filesystem.
-app.post('/api/set-default-background', (req, res) => {
-  try {
-    const configuredToken = process.env.BACKGROUND_ADMIN_TOKEN;
-
-    if (!configuredToken) {
-      return res.status(503).json({
-        error:
-          'Background administration is not enabled on this deployment.',
-      });
-    }
-
-    const providedToken = req.get('x-background-admin-token');
-
-    if (
-      !providedToken ||
-      providedToken.length !== configuredToken.length ||
-      providedToken !== configuredToken
-    ) {
-      return res.status(403).json({
-        error: 'Not authorized.',
-      });
-    }
-
-    const clientIp = getClientIp(req);
-
-    if (
-      isRateLimited(
-        `background:${clientIp}`,
-        3,
-        15 * 60 * 1000
-      )
-    ) {
-      return res.status(429).json({
-        error:
-          'Too many background update attempts. Please try again later.',
-      });
-    }
-
-    const { image } = req.body;
-
-    if (!image || typeof image !== 'string') {
-      return res.status(400).json({
-        error: 'Image data is required.',
-      });
-    }
-
-    const matches = image.match(
-      /^data:image\/([a-zA-Z0-9+.-]+);base64,(.+)$/
-    );
-
-    let base64Payload = image;
-
-    if (matches && matches[2]) {
-      base64Payload = matches[2];
-    }
-
-    if (!base64Payload || base64Payload.length > 12 * 1024 * 1024) {
-      return res.status(400).json({
-        error: 'Image is missing or too large.',
-      });
-    }
-
-    const buffer = Buffer.from(base64Payload, 'base64');
-
-    if (
-      buffer.length === 0 ||
-      buffer.length > MAX_BACKGROUND_BYTES
-    ) {
-      return res.status(400).json({
-        error: 'Invalid or oversized image.',
-      });
-    }
-
-    const publicAssetsDir = path.join(
-      process.cwd(),
-      'public',
-      'assets'
-    );
-
-    if (!fs.existsSync(publicAssetsDir)) {
-      fs.mkdirSync(publicAssetsDir, {
-        recursive: true,
-      });
-    }
-
-    const targetFile = path.join(
-      publicAssetsDir,
-      'background.jpg'
-    );
-
-    fs.writeFileSync(targetFile, buffer);
-
-    const distAssetsDir = path.join(
-      process.cwd(),
-      'dist',
-      'assets'
-    );
-
-    if (fs.existsSync(distAssetsDir)) {
-      try {
-        fs.writeFileSync(
-          path.join(distAssetsDir, 'background.jpg'),
-          buffer
-        );
-      } catch (err) {
-        console.warn(
-          'Could not write to dist/assets:',
-          err
-        );
-      }
-    }
-
-    console.log(
-      `[BACKGROUND SET] Saved default background: ${buffer.length} bytes`
-    );
-
-    return res.json({
-      success: true,
-      message:
-        'Background successfully set as the site default.',
-      url: `/assets/background.jpg?v=${Date.now()}`,
-      bytes: buffer.length,
-    });
-  } catch (err) {
-    console.error(
-      'Error in /api/set-default-background:',
-      err
-    );
-
-    return res.status(500).json({
-      error: 'Failed to save background image.',
-    });
-  }
 });
 
 // -----------------------------------------------------------------------------
