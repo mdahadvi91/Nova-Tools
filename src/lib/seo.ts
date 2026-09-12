@@ -58,7 +58,7 @@ export function getSiteOrigin(): string {
       return `https://${process.env.VERCEL_URL.replace(/\/+$/, '')}`;
     }
   }
-  return 'https://nova-tools.vercel.app';
+  return 'https://nova-tools-hr.vercel.app';
 }
 
 /**
