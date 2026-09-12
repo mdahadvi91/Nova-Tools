@@ -553,6 +553,243 @@ export const TOOL_SEO_DICTIONARY: Record<string, Partial<ToolSeoData>> = {
     ],
     relatedToolIds: ['ats-checker', 'bullet-improver', 'interview-prep', 'image-to-pdf'],
   },
+
+  'vcard-qr': {
+    h1: 'Free vCard QR Code Generator (Digital Business Card)',
+    metaTitle: 'vCard QR Code Generator - Digital Business Card Free | Nova Tools',
+    metaDescription: 'Create scannable contact vCard QR codes for business cards, resumes, and email signatures. Directly adds contact to smartphone address books.',
+    introduction: 'Generate digital business card QR codes following the universal vCard 3.0 standard. When scanned with iOS or Android camera apps, your name, phone number, email, company, and website can be saved directly to the contact list with a single tap.',
+    howToUse: [
+      'Enter your full name, organization, job title, and phone numbers (mobile/work).',
+      'Provide your email address, physical location, and company website URL.',
+      'Customize QR colors, corner styling, and error correction level.',
+      'Test scan the live preview on your phone to verify the contact card import.',
+      'Download high-resolution PNG or SVG ready for print or digital sharing.',
+    ],
+    features: [
+      'Standard vCard 3.0 specification compatibility across Apple iOS and Google Android.',
+      'High-density QR matrix with automatic error correction ensuring fast scanning.',
+      'Live interactive preview with instant address book test scan.',
+      'Zero cloud storage: your personal contact information remains confidential on your device.',
+    ],
+    supportedFormats: 'Output: High-res PNG, JPG, and crisp vector SVG.',
+    privacyExplanation: 'We value your contact privacy. Contact information entered is compiled directly into standard vCard payload format within your web browser. No personal phone numbers or emails are ever transmitted to our servers.',
+    useCases: [
+      {
+        title: 'Physical Business Cards',
+        description: 'Print a clean QR code on the back of paper business cards so prospects save your number in seconds.',
+      },
+      {
+        title: 'Conferences & Networking Events',
+        description: 'Display your contact QR badge on your smartphone lock screen for quick contactless exchange.',
+      },
+      {
+        title: 'Email Signatures & Portfolios',
+        description: 'Embed a contact QR code in PDF proposals, media kits, or resumes for immediate mobile access.',
+      },
+    ],
+    faqs: [
+      {
+        question: 'Does scanning this QR code automatically save my contact details in the phone?',
+        answer: 'Yes! When scanned using default iPhone Camera or Android Google Lens, users receive an instant "Add to Contacts" prompt with all fields populated.',
+      },
+      {
+        question: 'Will the vCard QR code expire over time?',
+        answer: 'No! This is a static vCard QR code containing the raw contact payload directly inside the matrix. It never expires and does not rely on external redirection servers.',
+      },
+    ],
+    relatedToolIds: ['photo-qr-overlay', 'whatsapp-qr', 'qr-designer', 'business-card'],
+  },
+
+  'whatsapp-qr': {
+    h1: 'WhatsApp QR Code Generator with Custom Message',
+    metaTitle: 'WhatsApp QR Code Generator (Click-to-Chat) | Nova Tools',
+    metaDescription: 'Generate WhatsApp QR codes and direct click-to-chat links with custom pre-filled greetings. Works instantly on mobile and desktop without saving numbers.',
+    introduction: 'Create custom WhatsApp QR codes that open a direct WhatsApp chat window with your phone number and an optional pre-filled message, eliminating the friction of saving numbers first.',
+    howToUse: [
+      'Enter your international phone number with country code (e.g., +1, +44, +880).',
+      'Add an optional introductory message (e.g., "Hi, I would like to inquire about your services").',
+      'Customize the QR code styling and download in your preferred format.',
+      'Share on social media, business flyers, or storefront windows.',
+    ],
+    features: [
+      'Official WhatsApp API universal click-to-chat linking protocol.',
+      'Pre-filled message support with automatic URL encoding for emojis and punctuation.',
+      'Runs 100% locally in your browser with no phone numbers logged.',
+      'High-resolution vector and raster export formats.',
+    ],
+    supportedFormats: 'Output: PNG, JPG, and SVG vector.',
+    privacyExplanation: 'Your phone number and messages are never stored. The click-to-chat URL is constructed client-side and converted directly into QR code pixels in browser RAM.',
+    useCases: [
+      {
+        title: 'Customer Support & Lead Generation',
+        description: 'Place on your website, packaging, or receipts so customers can reach your support desk instantly.',
+      },
+      {
+        title: 'Social Media & Marketing Ads',
+        description: 'Allow clients to message your sales team on WhatsApp directly without having to add your phone number to their contacts first.',
+      },
+    ],
+    faqs: [
+      {
+        question: 'Does the customer need to save my number first?',
+        answer: 'No. Scanning the WhatsApp QR code opens the conversation thread immediately in WhatsApp without requiring the user to add you to their address book.',
+      },
+    ],
+    relatedToolIds: ['photo-qr-overlay', 'vcard-qr', 'qr-designer', 'qr-scanner'],
+  },
+
+  'qr-scanner': {
+    h1: 'Free Online QR Code & Barcode Scanner (Webcam & Image)',
+    metaTitle: 'Online QR Code Scanner - Scan from Camera or File | Nova Tools',
+    metaDescription: 'Scan QR codes and barcodes directly from your device camera or uploaded image. 100% private in-browser decoding with zero server uploads.',
+    introduction: 'Scan and decode QR codes, barcodes, and digital passes straight from your web browser using your laptop webcam, smartphone camera, or an uploaded image file.',
+    howToUse: [
+      'Choose between Camera Mode (live webcam video stream) or Upload Image Mode.',
+      'Point your camera at the QR code, or drag and drop a screenshot/photo of the barcode.',
+      'View the decoded payload instantly, whether a website URL, Wi-Fi credential, text, or contact card.',
+      'Click to copy the decoded data or open links safely.',
+    ],
+    features: [
+      'Decodes all major 2D and 1D formats including QR Code, Data Matrix, UPC, and EAN.',
+      'Hardware-accelerated video frame scanning using HTML5 media streams.',
+      'Safe URL inspector: view raw links before deciding to visit them.',
+      'Strict privacy: camera streams stay on your physical device and are never recorded.',
+    ],
+    supportedFormats: 'Camera input or files: JPG, PNG, WebP, GIF, BMP.',
+    privacyExplanation: 'Your camera feed and uploaded screenshots are analyzed locally using JavaScript computer vision algorithms. No video or photo data is ever broadcast or saved.',
+    useCases: [
+      {
+        title: 'Desktop QR Verification',
+        description: 'Scan QR codes displayed on computer screens or documents without reaching for your mobile phone.',
+      },
+      {
+        title: 'Suspicious Link Safety Inspection',
+        description: 'Inspect the actual destination URL of unknown QR codes before opening them in a browser.',
+      },
+    ],
+    faqs: [
+      {
+        question: 'Does Nova Tools record or store my webcam video?',
+        answer: 'Never. Camera access is strictly managed by your browser sandbox. Frames are inspected frame-by-frame in memory and immediately discarded.',
+      },
+    ],
+    relatedToolIds: ['photo-qr-overlay', 'vcard-qr', 'qr-designer', 'batch-qr'],
+  },
+
+  'jpg-to-webp': {
+    h1: 'Online JPG to WebP Converter (Next-Gen Web Performance)',
+    metaTitle: 'Convert JPG to WebP Online - Speed Up Your Website | Nova Tools',
+    metaDescription: 'Convert JPG photos to modern lightweight WebP format. Reduce image file size by up to 30-80% while retaining crisp visual quality. 100% private.',
+    introduction: 'Convert standard JPEG and JPG photos into modern Google WebP format. WebP provides superior lossy compression that significantly reduces file weight, accelerates website page loading, and improves SEO scores.',
+    howToUse: [
+      'Select or drop your JPG images into the converter box.',
+      'Adjust the target WebP compression quality slider (recommended 80-90%).',
+      'Preview before and after file sizes in real time.',
+      'Download your optimized WebP images individually or in bulk.',
+    ],
+    features: [
+      'Shrinks JPEG image sizes by 25-35% more than standard JPEG algorithms.',
+      'Full modern browser compatibility across Chrome, Safari, Edge, and Firefox.',
+      'Batch conversion with multi-core browser threading.',
+      '100% client-side privacy with zero server uploads.',
+    ],
+    supportedFormats: 'Input: JPG, JPEG, JFIF. Output: Modern .webp raster format.',
+    privacyExplanation: 'All image decoding and re-encoding runs locally via the browser Canvas API. No images leave your computer.',
+    useCases: [
+      {
+        title: 'Core Web Vitals & SEO Optimization',
+        description: 'Satisfy Google PageSpeed Insights "Serve images in next-gen formats" audit by serving WebP images.',
+      },
+      {
+        title: 'Mobile App Asset Optimization',
+        description: 'Compress photo assets to reduce overall application download bundle size.',
+      },
+    ],
+    faqs: [
+      {
+        question: 'Are WebP images supported by all modern browsers?',
+        answer: 'Yes! WebP is fully supported by all modern browsers including Google Chrome, Apple Safari (iOS 14+ / macOS 11+), Mozilla Firefox, and Microsoft Edge.',
+      },
+    ],
+    relatedToolIds: ['webp-to-jpg', 'png-to-webp', 'image-compressor', 'image-resizer'],
+  },
+
+  'word-counter': {
+    h1: 'Free Online Word Counter & Character Counter Tool',
+    metaTitle: 'Word Counter & Character Counter - Real-Time Text Stats | Nova Tools',
+    metaDescription: 'Free real-time word counter, character counter, sentence counter, paragraph counter, and estimated reading time calculator. Private, in-browser text tool.',
+    introduction: 'Calculate word count, character count (with and without spaces), sentence count, reading time, and speaking time in real time as you write or paste text. Essential for students, copywriters, and content creators.',
+    howToUse: [
+      'Type or paste your text directly into the text editor area.',
+      'Instantly monitor live metrics: words, characters, sentences, paragraphs, and reading duration.',
+      'View keyword density analysis to avoid overused words.',
+      'Copy your clean text or clear the workspace with one click.',
+    ],
+    features: [
+      'Instant real-time statistical calculations as you type.',
+      'Calculates reading time (200 wpm) and estimated speaking presentation time (130 wpm).',
+      'Counts characters with and without white spaces.',
+      'Strict confidentiality: your drafts and sensitive articles are never sent to remote servers.',
+    ],
+    supportedFormats: 'Plain text, Markdown, code, and formatted prose.',
+    privacyExplanation: 'Text typed or pasted into this tool is processed purely in your browser volatile memory. We do not store or transmit your writing.',
+    useCases: [
+      {
+        title: 'Academic Essays & Submissions',
+        description: 'Ensure college assignments, dissertations, and research papers meet strict word limits.',
+      },
+      {
+        title: 'Social Media Character Limits',
+        description: 'Craft posts optimized for character limits on X/Twitter (280 chars), LinkedIn, and Instagram captions.',
+      },
+    ],
+    faqs: [
+      {
+        question: 'Does this word counter store or log my essays?',
+        answer: 'No. All calculations are executed strictly client-side. Nothing is transmitted over the internet.',
+      },
+    ],
+    relatedToolIds: ['case-converter', 'text-cleaner', 'markdown-preview', 'json-formatter'],
+  },
+
+  'loan-calculator': {
+    h1: 'Free Loan Calculator & Monthly EMI Estimator',
+    metaTitle: 'Loan Calculator - Calculate Monthly EMI & Interest | Nova Tools',
+    metaDescription: 'Free loan calculator to compute monthly payments (EMI), total interest payable, and total loan cost. Supports home, auto, personal, and mortgage loans.',
+    introduction: 'Plan your finances with precision using our online Loan Calculator. Accurately estimate your monthly payment (EMI), breakdown of principal versus interest, and total cost of borrowing across various terms.',
+    howToUse: [
+      'Enter the total loan amount (principal).',
+      'Specify the annual interest rate percentage.',
+      'Select the loan term in years or months.',
+      'Examine the calculated monthly payment, total interest, and complete amortization overview.',
+    ],
+    features: [
+      'Standard mathematical compound amortization payment formula.',
+      'Interactive visual breakdown of principal vs. interest expense.',
+      'Supports mortgage, vehicle financing, student debt, and personal bank loans.',
+      'Zero financial tracking: your loan numbers are never logged or stored.',
+    ],
+    supportedFormats: 'Calculates in any global currency (USD, EUR, GBP, BDT, INR, etc.).',
+    privacyExplanation: 'Financial inputs are processed exclusively on your device. We do not record or share your financial data.',
+    useCases: [
+      {
+        title: 'Mortgage & Home Buying',
+        description: 'Estimate monthly mortgage payments before meeting with bank lending officers.',
+      },
+      {
+        title: 'Auto Financing & Car Loans',
+        description: 'Compare 36, 48, and 60-month vehicle financing options to find an affordable monthly payment.',
+      },
+    ],
+    faqs: [
+      {
+        question: 'Does this calculation include taxes and insurance fees?',
+        answer: 'This tool calculates the core principal and interest amortization. Local taxes, property insurance, or escrow fees vary by region and lender.',
+      },
+    ],
+    relatedToolIds: ['compound-interest', 'tip-calculator', 'discount-calculator', 'date-calculator'],
+  },
 };
 
 /**

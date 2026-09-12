@@ -11,4 +11,4 @@ User-agent: Googlebot-Image
 Allow: /
 
 # Sitemap
-Sitemap: https://nova-tools-hr.vercel.app/sitemap.xml
+Sitemap: https://nova-tools.vercel.app/sitemap.xml

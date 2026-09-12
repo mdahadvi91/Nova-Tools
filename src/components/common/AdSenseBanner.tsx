@@ -9,20 +9,21 @@ interface AdSenseBannerProps {
 }
 
 export const AdSenseBanner: React.FC<AdSenseBannerProps> = ({
-  slotId = 'nova-default-slot',
+  slotId,
   className = '',
   format = 'auto',
 }) => {
   const { t } = useApp();
   const adRef = useRef<HTMLModElement>(null);
   const [adPushed, setAdPushed] = useState(false);
-  const [isBlockedOrEmpty, setIsBlockedOrEmpty] = useState(false);
+
+  // Validate if slot is a genuine numeric AdSense slot
+  const isNumericSlot = Boolean(slotId && /^\d+$/.test(slotId.trim()));
 
   useEffect(() => {
     // Check if user explicitly rejected advertising cookies
     const consent = getStoredConsent();
     if (consent && consent.advertising === false) {
-      // AdSense Consent Mode handles non-personalized ads, but if completely disabled, don't spam
       return;
     }
 
@@ -40,8 +41,7 @@ export const AdSenseBanner: React.FC<AdSenseBannerProps> = ({
           }
         }
       } catch (err: any) {
-        // Benign ad-blocker or duplicate push suppression
-        setIsBlockedOrEmpty(true);
+        // Benign ad-blocker or pending approval suppression
       }
     }
   }, [slotId, adPushed]);
@@ -61,17 +61,10 @@ export const AdSenseBanner: React.FC<AdSenseBannerProps> = ({
           className="adsbygoogle"
           style={{ display: 'block', width: '100%', minHeight: '90px' }}
           data-ad-client={ADSENSE_CLIENT_ID}
-          data-ad-slot={slotId}
+          {...(isNumericSlot ? { 'data-ad-slot': slotId!.trim() } : {})}
           data-ad-format={format}
           data-full-width-responsive="true"
         />
-
-        {/* Fallback label shown if blocked by client extension or awaiting Google review */}
-        {isBlockedOrEmpty && (
-          <div className="text-[11px] text-slate-400/60 py-2 select-none">
-            Google AdSense Slot ({slotId})
-          </div>
-        )}
       </div>
     </aside>
   );

@@ -18,211 +18,147 @@ export interface SeoConfig {
 }
 
 const DEFAULT_TITLE = 'Nova Tools - Free Privacy-First Online Utility Platform';
-
 const DEFAULT_DESCRIPTION =
-  'Free, privacy-first online tools for image conversion, PDF processing, QR codes, career tools, calculators, and developer utilities.';
-
+  'Free, 100% client-side privacy-first online tools for image conversion, PDF merge & split, QR code styling & photo overlay, ATS resume building, and developer utilities.';
 const DEFAULT_KEYWORDS = [
   'nova tools',
   'online tools',
   'free utilities',
-  'client-side tools',
-  'privacy-first tools',
+  'client-side',
+  'privacy-first',
   'photo qr overlay',
   'pdf tools',
   'image converter',
-  'resume builder',
+  'ats resume builder',
   'json formatter',
 ];
 
 /**
- * Get the current production/site origin safely.
- *
- * Browser:
- *   Uses the actual current origin so canonical/OG URLs follow
- *   the deployed domain automatically.
- *
- * Non-browser:
- *   Uses the real production domain as a safe fallback.
+ * Utility to get current base origin safely (Vercel, custom domain, or browser origin)
  */
 export function getSiteOrigin(): string {
+  // 1. Browser runtime: dynamically uses the live Vercel URL or custom domain
   if (typeof window !== 'undefined' && window.location.origin) {
     return window.location.origin;
   }
-
-  return 'https://nova-tools-hr.vercel.app';
+  // 2. Client-side Vite environment variable if set
+  const metaEnv = typeof import.meta !== 'undefined' ? (import.meta as any).env : null;
+  if (metaEnv && metaEnv.VITE_SITE_URL) {
+    return (metaEnv.VITE_SITE_URL as string).replace(/\/+$/, '');
+  }
+  // 3. Node / Vercel runtime environment variables
+  if (typeof process !== 'undefined' && process.env) {
+    if (process.env.SITE_URL) {
+      return process.env.SITE_URL.replace(/\/+$/, '');
+    }
+    if (process.env.VERCEL_PROJECT_PRODUCTION_URL) {
+      return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL.replace(/\/+$/, '')}`;
+    }
+    if (process.env.VERCEL_URL) {
+      return `https://${process.env.VERCEL_URL.replace(/\/+$/, '')}`;
+    }
+  }
+  return 'https://nova-tools.vercel.app';
 }
 
 /**
- * Set or update a <meta> tag in the document <head>.
+ * Set or update a <meta> tag in the document <head>
  */
 function setMetaTag(selectorKey: string, selectorValue: string, content: string) {
   if (typeof document === 'undefined') return;
-
-  let element = document.querySelector(
-    `meta[${selectorKey}="${selectorValue}"]`
-  ) as HTMLMetaElement | null;
-
+  let element = document.querySelector(`meta[${selectorKey}="${selectorValue}"]`) as HTMLMetaElement | null;
   if (!element) {
     element = document.createElement('meta');
     element.setAttribute(selectorKey, selectorValue);
     document.head.appendChild(element);
   }
-
   element.setAttribute('content', content);
 }
 
 /**
- * Set or update a <link> tag in the document <head>.
+ * Set or update a <link> tag in the document <head>
  */
-function setLinkTag(
-  rel: string,
-  href: string,
-  attributes: Record<string, string> = {}
-) {
+function setLinkTag(rel: string, href: string, attributes: Record<string, string> = {}) {
   if (typeof document === 'undefined') return;
-
   let selector = `link[rel="${rel}"]`;
-
   if (attributes.hreflang) {
     selector += `[hreflang="${attributes.hreflang}"]`;
   }
-
-  let element = document.querySelector(
-    selector
-  ) as HTMLLinkElement | null;
-
+  let element = document.querySelector(selector) as HTMLLinkElement | null;
   if (!element) {
     element = document.createElement('link');
     element.setAttribute('rel', rel);
     document.head.appendChild(element);
   }
-
   element.setAttribute('href', href);
-
   Object.entries(attributes).forEach(([key, val]) => {
     element!.setAttribute(key, val);
   });
 }
 
 /**
- * Set JSON-LD structured data script.
+ * Set JSON-LD structured data script
  */
 function setStructuredData(id: string, jsonContent: object) {
   if (typeof document === 'undefined') return;
-
   let script = document.getElementById(id) as HTMLScriptElement | null;
-
   if (!script) {
     script = document.createElement('script');
     script.id = id;
     script.type = 'application/ld+json';
     document.head.appendChild(script);
   }
-
   script.textContent = JSON.stringify(jsonContent);
 }
 
 /**
- * Remove an element by id from document.
+ * Remove an element by id from document
  */
 function removeElementById(id: string) {
   if (typeof document === 'undefined') return;
-
   const el = document.getElementById(id);
-
-  if (el) {
-    el.remove();
-  }
+  if (el) el.remove();
 }
 
 /**
- * Remove runtime-generated hreflang links.
- *
- * Nova Tools currently uses the same URL for multiple UI languages.
- * Until language-specific indexable URLs exist, emitting identical
- * hreflang URLs for en/bn/ar is not a valid international URL strategy.
- */
-function removeHreflangLinks() {
-  if (typeof document === 'undefined') return;
-
-  document
-    .querySelectorAll('link[rel="alternate"][hreflang]')
-    .forEach((element) => element.remove());
-}
-
-/**
- * Core SEO updater function called whenever active route,
- * tool, or language changes.
+ * Core SEO updater function called whenever active route, tool, or language changes
  */
 export function updateSeo(config: SeoConfig) {
-  if (typeof window === 'undefined' || typeof document === 'undefined') {
-    return;
-  }
+  if (typeof window === 'undefined' || typeof document === 'undefined') return;
 
   const origin = getSiteOrigin();
   const lang = config.language || 'en';
 
-  // 1. Determine titles, descriptions & canonical path
+  // 1. Determine Titles, Descriptions & Canonical Path
   let pageTitle = DEFAULT_TITLE;
   let pageDescription = DEFAULT_DESCRIPTION;
   let pageKeywords = [...DEFAULT_KEYWORDS];
   let canonicalPath = '/';
-
   let breadcrumbItems = [
     {
       name: 'Home',
       url: `${origin}/`,
     },
   ];
-
-  let activeToolFaqs: Array<{
-    question: string;
-    answer: string;
-  }> = [];
+  let activeToolFaqs: Array<{ question: string; answer: string }> = [];
 
   if (config.is404) {
     pageTitle = '404 - Page or Tool Not Found | Nova Tools';
-
-    pageDescription =
-      'The requested tool or page could not be found. Explore Nova Tools and its privacy-first online utility tools.';
-
+    pageDescription = 'The requested tool or page could not be found. Explore our 45+ privacy-first utility tools.';
     canonicalPath = window.location.pathname;
   } else if (config.toolId) {
     const tool = TOOLS.find((t) => t.id === config.toolId);
-
     if (tool) {
-      const locName = getLocalizedToolName(
-        tool.id,
-        tool.name,
-        lang
-      );
+      const locName = getLocalizedToolName(tool.id, tool.name, lang);
+      const locDesc = getLocalizedToolDesc(tool.id, tool.description, lang);
+      const catDef = CATEGORIES.find((c) => c.id === tool.category);
+      const catName = catDef?.nameKey || tool.category.toUpperCase();
 
-      const locDesc = getLocalizedToolDesc(
-        tool.id,
-        tool.description,
-        lang
-      );
-
-      const catDef = CATEGORIES.find(
-        (c) => c.id === tool.category
-      );
-
-      const catName =
-        catDef?.nameKey || tool.category.toUpperCase();
-
-      const seoData = getToolSeoContent(
-        tool.id,
-        locName,
-        locDesc,
-        tool.category
-      );
-
+      const seoData = getToolSeoContent(tool.id, locName, locDesc, tool.category);
       activeToolFaqs = seoData.faqs;
 
       pageTitle = seoData.metaTitle;
       pageDescription = seoData.metaDescription;
-
       pageKeywords = [
         tool.name.toLowerCase(),
         locName.toLowerCase(),
@@ -231,7 +167,6 @@ export function updateSeo(config: SeoConfig) {
         'free online tool',
         'client-side',
       ];
-
       canonicalPath = getToolUrl(tool.id);
 
       breadcrumbItems.push(
@@ -246,25 +181,11 @@ export function updateSeo(config: SeoConfig) {
       );
     }
   } else if (config.category) {
-    const catDef = CATEGORIES.find(
-      (c) => c.id === config.category
-    );
-
-    const catName =
-      catDef?.nameKey || config.category.toUpperCase();
-
+    const catDef = CATEGORIES.find((c) => c.id === config.category);
+    const catName = catDef?.nameKey || config.category.toUpperCase();
     pageTitle = `${catName} Tools - Free Online Suite | Nova Tools`;
-
-    pageDescription =
-      `Collection of fast, privacy-focused ${catName.toLowerCase()} tools. Process files locally in your browser without uploading data to external servers.`;
-
-    pageKeywords = [
-      config.category,
-      `${config.category} tools`,
-      'privacy tools',
-      'nova tools',
-    ];
-
+    pageDescription = `Collection of fast, privacy-focused ${catName.toLowerCase()} tools. Process files locally in your browser without uploading data to external servers.`;
+    pageKeywords = [config.category, `${config.category} tools`, 'privacy tools', 'nova tools'];
     canonicalPath = getCategoryUrl(config.category);
 
     breadcrumbItems.push({
@@ -272,15 +193,9 @@ export function updateSeo(config: SeoConfig) {
       url: `${origin}${getCategoryUrl(config.category)}`,
     });
   } else if (config.legalPage) {
-    const legalName =
-      config.legalPage.charAt(0).toUpperCase() +
-      config.legalPage.slice(1);
-
+    const legalName = config.legalPage.charAt(0).toUpperCase() + config.legalPage.slice(1);
     pageTitle = `${legalName} Policy | Nova Tools`;
-
-    pageDescription =
-      `Read the official ${legalName.toLowerCase()} documentation and legal guidelines for Nova Tools.`;
-
+    pageDescription = `Read the official ${legalName.toLowerCase()} documentation and legal guidelines for Nova Tools privacy platform.`;
     canonicalPath = getLegalUrl(config.legalPage as any);
 
     breadcrumbItems.push({
@@ -289,146 +204,90 @@ export function updateSeo(config: SeoConfig) {
     });
   }
 
-  // 2. Set document title
+  // 2. Set Document Title
   document.title = pageTitle;
 
-  // 3. Set primary HTML meta tags
+  // 3. Set Primary HTML Meta Tags
   setMetaTag('name', 'description', pageDescription);
+  setMetaTag('name', 'keywords', pageKeywords.join(', '));
   setMetaTag('name', 'author', 'Nova Tools Team');
 
+  // Accidental noindex prevention: only 404 pages get noindex
   if (config.is404) {
-    setMetaTag(
-      'name',
-      'robots',
-      'noindex, follow'
-    );
+    setMetaTag('name', 'robots', 'noindex, follow');
   } else {
-    setMetaTag(
-      'name',
-      'robots',
-      'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'
-    );
+    setMetaTag('name', 'robots', 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1');
   }
 
-  // 4. Set canonical link
+  // 4. Set Canonical Link Tag
   const fullCanonicalUrl = `${origin}${canonicalPath}`;
+  setLinkTag('canonical', fullCanonicalUrl);
 
-  setLinkTag(
-    'canonical',
-    fullCanonicalUrl
-  );
+  // 5. Set Hreflang Alternate Links
+  const languages: { code: Language; hreflang: string }[] = [
+    { code: 'en', hreflang: 'en' },
+    { code: 'bn', hreflang: 'bn' },
+    { code: 'ar', hreflang: 'ar' },
+  ];
+  languages.forEach((item) => {
+    // English is the default clean URL; other languages append their query parameter for distinct indexable targets
+    const langUrl =
+      item.code === 'en'
+        ? fullCanonicalUrl
+        : `${fullCanonicalUrl}${canonicalPath.includes('?') ? '&' : '?'}lang=${item.code}`;
+    setLinkTag('alternate', langUrl, { hreflang: item.hreflang });
+  });
+  setLinkTag('alternate', fullCanonicalUrl, { hreflang: 'x-default' });
 
-  // 5. Remove invalid duplicate-language hreflang strategy.
-  //
-  // Language switching is currently client-side and does not have
-  // separate indexable URLs such as /en/, /bn/, /ar/.
-  removeHreflangLinks();
-
-  // 6. Open Graph metadata
-  setMetaTag(
-    'property',
-    'og:title',
-    pageTitle
-  );
-
-  setMetaTag(
-    'property',
-    'og:description',
-    pageDescription
-  );
-
-  setMetaTag(
-    'property',
-    'og:url',
-    fullCanonicalUrl
-  );
-
-  setMetaTag(
-    'property',
-    'og:type',
-    config.ogType || 'website'
-  );
-
-  setMetaTag(
-    'property',
-    'og:site_name',
-    'Nova Tools'
-  );
-
+  // 6. Set Open Graph Metadata
+  setMetaTag('property', 'og:title', pageTitle);
+  setMetaTag('property', 'og:description', pageDescription);
+  setMetaTag('property', 'og:url', fullCanonicalUrl);
+  setMetaTag('property', 'og:type', config.ogType || 'website');
+  setMetaTag('property', 'og:site_name', 'Nova Tools');
   const ogLocaleMap: Record<Language, string> = {
     en: 'en_US',
     bn: 'bn_BD',
     ar: 'ar_AR',
   };
+  setMetaTag('property', 'og:locale', ogLocaleMap[lang] || 'en_US');
+  setMetaTag('property', 'og:image', `${origin}/assets/background.jpg`);
 
-  setMetaTag(
-    'property',
-    'og:locale',
-    ogLocaleMap[lang] || 'en_US'
-  );
+  // 7. Set Twitter / X Metadata
+  setMetaTag('name', 'twitter:card', 'summary_large_image');
+  setMetaTag('name', 'twitter:title', pageTitle);
+  setMetaTag('name', 'twitter:description', pageDescription);
+  setMetaTag('name', 'twitter:image', `${origin}/assets/background.jpg`);
 
-  setMetaTag(
-    'property',
-    'og:image',
-    `${origin}/assets/background.jpg`
-  );
-
-  // 7. Twitter / X metadata
-  setMetaTag(
-    'name',
-    'twitter:card',
-    'summary_large_image'
-  );
-
-  setMetaTag(
-    'name',
-    'twitter:title',
-    pageTitle
-  );
-
-  setMetaTag(
-    'name',
-    'twitter:description',
-    pageDescription
-  );
-
-  setMetaTag(
-    'name',
-    'twitter:image',
-    `${origin}/assets/background.jpg`
-  );
-
-  // 8. Schema.org structured data
-
-  // WebSite schema.
-  //
-  // SearchAction has intentionally been removed because the site's
-  // current search UI is a client-side modal and does not expose
-  // a real crawlable ?q= search results URL.
+  // 8. Inject Schema.org Structured Data
+  // WebSite Schema
   const websiteSchema = {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
     name: 'Nova Tools',
     url: `${origin}/`,
     description: DEFAULT_DESCRIPTION,
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: `${origin}/?q={search_term_string}`,
+      'query-input': 'required name=search_term_string',
+    },
     publisher: {
       '@type': 'Organization',
       name: 'Nova Tools',
       url: `${origin}/`,
+      logo: {
+        '@type': 'ImageObject',
+        url: `${origin}/assets/background.jpg`,
+      },
     },
   };
+  setStructuredData('nova-schema-website', websiteSchema);
 
-  setStructuredData(
-    'nova-schema-website',
-    websiteSchema
-  );
-
-  // Tool-specific schema
+  // Tool Specific Schema (SoftwareApplication / WebApplication)
+  // Compliant with Google guidelines: No fake aggregateRating without real user reviews
   if (config.toolId && !config.is404) {
-    const tool = TOOLS.find(
-      (t) => t.id === config.toolId
-    );
-
+    const tool = TOOLS.find((t) => t.id === config.toolId);
     if (tool) {
       const toolSchema = {
         '@context': 'https://schema.org',
@@ -436,12 +295,9 @@ export function updateSeo(config: SeoConfig) {
         name: tool.name,
         description: tool.description,
         url: fullCanonicalUrl,
-        applicationCategory: getApplicationCategory(
-          tool.category
-        ),
-        operatingSystem: 'All',
-        browserRequirements:
-          'Requires modern browser with HTML5 support',
+        applicationCategory: getApplicationCategory(tool.category),
+        operatingSystem: 'All (Web Browser, Client-side)',
+        browserRequirements: 'Requires modern browser with HTML5 support',
         offers: {
           '@type': 'Offer',
           price: '0',
@@ -449,13 +305,9 @@ export function updateSeo(config: SeoConfig) {
         },
         featureList: tool.keywords.join(', '),
       };
+      setStructuredData('nova-schema-tool', toolSchema);
 
-      setStructuredData(
-        'nova-schema-tool',
-        toolSchema
-      );
-
-      // FAQPage schema
+      // FAQPage Schema for Google Rich Snippets
       if (activeToolFaqs.length > 0) {
         const faqSchema = {
           '@context': 'https://schema.org',
@@ -469,11 +321,7 @@ export function updateSeo(config: SeoConfig) {
             },
           })),
         };
-
-        setStructuredData(
-          'nova-schema-faq',
-          faqSchema
-        );
+        setStructuredData('nova-schema-faq', faqSchema);
       } else {
         removeElementById('nova-schema-faq');
       }
@@ -483,47 +331,34 @@ export function updateSeo(config: SeoConfig) {
     removeElementById('nova-schema-faq');
   }
 
-  // 9. BreadcrumbList schema
+  // BreadcrumbList Schema
   if (breadcrumbItems.length > 1) {
     const breadcrumbSchema = {
       '@context': 'https://schema.org',
       '@type': 'BreadcrumbList',
-      itemListElement: breadcrumbItems.map(
-        (item, index) => ({
-          '@type': 'ListItem',
-          position: index + 1,
-          name: item.name,
-          item: item.url,
-        })
-      ),
+      itemListElement: breadcrumbItems.map((item, index) => ({
+        '@type': 'ListItem',
+        position: index + 1,
+        name: item.name,
+        item: item.url,
+      })),
     };
-
-    setStructuredData(
-      'nova-schema-breadcrumbs',
-      breadcrumbSchema
-    );
+    setStructuredData('nova-schema-breadcrumbs', breadcrumbSchema);
   } else {
-    removeElementById(
-      'nova-schema-breadcrumbs'
-    );
+    removeElementById('nova-schema-breadcrumbs');
   }
 }
 
-function getApplicationCategory(
-  cat: ToolCategory
-): string {
+function getApplicationCategory(cat: ToolCategory): string {
   switch (cat) {
     case 'image':
     case 'design':
       return 'MultimediaApplication';
-
     case 'pdf':
     case 'career':
       return 'BusinessApplication';
-
     case 'calculators':
       return 'FinanceApplication';
-
     case 'utilities':
     case 'qr':
     default:

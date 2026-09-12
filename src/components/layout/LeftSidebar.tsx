@@ -83,22 +83,22 @@ export const LeftSidebar: React.FC = () => {
       />
 
       {/* Left Drawer Container */}
-      <div className="relative w-80 sm:w-92 max-w-[85vw] h-full liquid-glass border-e border-white/10 shadow-2xl flex flex-col justify-between z-10 overflow-hidden">
+      <div className="relative w-80 sm:w-92 max-w-[85vw] h-full liquid-glass border-e border-slate-200 dark:border-white/10 shadow-2xl flex flex-col justify-between z-10 overflow-hidden">
         {/* Header */}
-        <div className="p-4 sm:p-5 border-b border-white/10 flex items-center justify-between">
+        <div className="p-4 sm:p-5 border-b border-slate-200 dark:border-white/10 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-700 flex items-center justify-center text-white shadow-md">
               <Sparkles className="w-4 h-4" />
             </div>
             <div>
-              <h2 className="text-base font-bold text-white tracking-tight">{t.allTools}</h2>
-              <p className="text-[11px] text-slate-400">{t.clientSideBadge}</p>
+              <h2 className="text-base font-bold text-slate-900 dark:text-white tracking-tight">{t.allTools}</h2>
+              <p className="text-[11px] text-slate-500 dark:text-slate-400">{t.clientSideBadge}</p>
             </div>
           </div>
           <button
             type="button"
             onClick={closeAllSidebars}
-            className="p-1.5 rounded-xl hover:bg-white/10 text-slate-400 hover:text-white transition-colors"
+            className="p-1.5 rounded-xl hover:bg-slate-100 dark:hover:bg-white/10 text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors"
             aria-label="Close Left Sidebar"
           >
             <X className="w-5 h-5" />
@@ -119,23 +119,23 @@ export const LeftSidebar: React.FC = () => {
             }}
             className={`w-full flex items-center justify-between p-3 rounded-xl transition-all ${
               navState.view === 'home'
-                ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
-                : 'text-slate-200 hover:bg-white/10 hover:text-white'
+                ? 'bg-emerald-500/15 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 border border-emerald-500/30 font-semibold shadow-sm'
+                : 'text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-white/10 hover:text-slate-900 dark:hover:text-white'
             }`}
           >
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center text-emerald-400">
+              <div className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-white/10 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
                 <Home className="w-4 h-4" />
               </div>
               <div className="text-start">
                 <div className="text-sm font-semibold">{t.nav.home}</div>
-                <div className="text-[11px] text-slate-400">{t.popularTools}</div>
+                <div className="text-[11px] text-slate-500 dark:text-slate-400">{t.popularTools}</div>
               </div>
             </div>
             <ChevronRight className="w-4 h-4 text-slate-400 rtl:rotate-180" />
           </a>
 
-          <div className="pt-3 pb-1.5 px-2 text-[10px] font-bold uppercase tracking-wider text-slate-400">
+          <div className="pt-3 pb-1.5 px-2 text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
             {t.categories.all}
           </div>
 
@@ -159,8 +159,8 @@ export const LeftSidebar: React.FC = () => {
                 }}
                 className={`w-full flex items-center justify-between p-3 rounded-xl transition-all ${
                   isActive
-                    ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
-                    : 'text-slate-200 hover:bg-white/10 hover:text-white'
+                    ? 'bg-emerald-500/15 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 border border-emerald-500/30 font-semibold shadow-sm'
+                    : 'text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-white/10 hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
                 <div className="flex items-center gap-3">
@@ -171,7 +171,7 @@ export const LeftSidebar: React.FC = () => {
                   </div>
                   <div className="text-start">
                     <div className="text-xs sm:text-sm font-semibold">{wsName}</div>
-                    <div className="text-[10px] text-slate-400">{count} {t.allTools.toLowerCase()}</div>
+                    <div className="text-[10px] text-slate-500 dark:text-slate-400">{count} {t.allTools.toLowerCase()}</div>
                   </div>
                 </div>
                 <ChevronRight className="w-4 h-4 text-slate-400 rtl:rotate-180" />
@@ -181,8 +181,8 @@ export const LeftSidebar: React.FC = () => {
         </div>
 
         {/* Footer info */}
-        <div className="p-3.5 border-t border-white/10 bg-black/20 text-center">
-          <p className="text-[11px] text-slate-400">
+        <div className="p-3.5 border-t border-slate-200 dark:border-white/10 bg-slate-100/50 dark:bg-black/20 text-center">
+          <p className="text-[11px] text-slate-500 dark:text-slate-400">
             {t.privacyBadge}
           </p>
         </div>

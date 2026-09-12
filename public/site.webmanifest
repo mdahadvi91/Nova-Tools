@@ -1,0 +1,17 @@
+{
+  "name": "Nova Tools",
+  "short_name": "Nova Tools",
+  "description": "Privacy-first online utility platform for image conversion, PDF processing, QR overlay, career tools, and developer utilities.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#060b09",
+  "theme_color": "#060b09",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "48x48 72x72 96x96 144x144 192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -154,7 +154,7 @@ export const PrivacyPolicyPage: React.FC = () => {
           8. Contacting Our Data Privacy Team
         </h2>
         <p>
-          If you have questions regarding this Privacy Policy or wish to exercise data protection rights, please contact our privacy desk via our <a href="/contact" className="text-emerald-500 underline hover:text-emerald-400">Contact Portal</a> or by email at <a href="mailto:privacy@novatools.dev" className="text-emerald-500 underline hover:text-emerald-400">privacy@novatools.dev</a>.
+          If you have questions regarding this Privacy Policy or wish to exercise data protection rights, please contact our privacy desk via our <a href="/contact" className="text-emerald-500 underline hover:text-emerald-400">Contact Portal</a> or by email directly at <a href="mailto:vnai6050@gmail.com" className="text-emerald-500 underline hover:text-emerald-400 font-mono">vnai6050@gmail.com</a>.
         </p>
       </div>
     </div>
@@ -392,6 +392,8 @@ export const ContactPage: React.FC = () => {
     ticketId: string;
     receivedAt: string;
     message: string;
+    mailtoUrl: string;
+    recipientEmail: string;
   } | null>(null);
 
   // Capture render time to detect bot instant-submissions
@@ -445,11 +447,31 @@ export const ContactPage: React.FC = () => {
         throw new Error(data.error || 'Failed to deliver message. Please try again.');
       }
 
+      const generatedTicketId = data.ticketId || 'NT-CONFIRMED';
+      const mailtoSubject = encodeURIComponent(`[Nova Tools Ticket #${generatedTicketId}] ${subject.trim() || category}`);
+      const mailtoBody = encodeURIComponent(
+        `Hello Nova Tools Support,\n\nI have submitted an inquiry:\n\n` +
+        `• Name: ${name.trim()}\n` +
+        `• Email: ${email.trim()}\n` +
+        `• Topic: ${category}\n` +
+        `• Ticket Reference: #${generatedTicketId}\n\n` +
+        `Message:\n${message.trim()}\n\n` +
+        `Best regards,\n${name.trim()}`
+      );
+      const mailtoUrl = `mailto:vnai6050@gmail.com?subject=${mailtoSubject}&body=${mailtoBody}`;
+
       setDeliveryResult({
-        ticketId: data.ticketId || 'NT-CONFIRMED',
+        ticketId: generatedTicketId,
         receivedAt: data.receivedAt || new Date().toISOString(),
-        message: data.message || 'Your message has been delivered to our engineering desk.',
+        message: data.message || 'Your message has been logged and queued for our team at vnai6050@gmail.com.',
+        mailtoUrl,
+        recipientEmail: 'vnai6050@gmail.com',
       });
+
+      // Try triggering mail client so email can be sent directly to vnai6050@gmail.com
+      try {
+        window.open(mailtoUrl, '_blank');
+      } catch {}
     } catch (err: any) {
       console.error('Contact submission error:', err);
       setErrorMessage(err.message || 'Unable to connect to the server. Please check your connection.');
@@ -480,8 +502,33 @@ export const ContactPage: React.FC = () => {
           Contact Nova Tools
         </h1>
         <p className="text-sm text-slate-500 dark:text-slate-400 max-w-lg mx-auto">
-          Need assistance, spotted a bug, or have an idea for a new utility? Every submission is assigned a verified ticket and delivered to our engineering desk.
+          Need assistance, spotted a bug, or have an idea for a new utility? Every submission is assigned a verified ticket and delivered to our engineering desk at <span className="font-mono text-emerald-600 dark:text-emerald-400 font-bold">vnai6050@gmail.com</span>.
         </p>
+      </div>
+
+      {/* Direct Gmail Channel Banner */}
+      <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center flex-shrink-0 shadow-sm">
+            <Mail className="w-5 h-5" />
+          </div>
+          <div>
+            <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">Official Contact & Support Email</p>
+            <a
+              href="mailto:vnai6050@gmail.com"
+              className="text-sm font-bold font-mono text-slate-900 dark:text-white hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
+            >
+              vnai6050@gmail.com
+            </a>
+          </div>
+        </div>
+        <a
+          href="mailto:vnai6050@gmail.com?subject=Nova%20Tools%20Direct%20Inquiry"
+          className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-md transition-all active:scale-95 flex items-center gap-1.5 flex-shrink-0"
+        >
+          <Mail className="w-3.5 h-3.5" />
+          <span>Email Us via Gmail</span>
+        </a>
       </div>
 
       {deliveryResult ? (
@@ -492,41 +539,54 @@ export const ContactPage: React.FC = () => {
           </div>
 
           <div className="space-y-2">
-            <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-500/20 text-emerald-300 uppercase tracking-wide">
+            <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 uppercase tracking-wide">
               Delivered Successfully
             </span>
             <h3 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">
               Ticket Confirmed
             </h3>
-            <p className="text-xs sm:text-sm text-slate-400 max-w-md mx-auto leading-relaxed">
+            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 max-w-md mx-auto leading-relaxed">
               {deliveryResult.message}
             </p>
           </div>
 
           {/* Ticket Metadata Card */}
-          <div className="p-4 rounded-xl bg-black/20 border border-white/10 text-left space-y-2 font-mono text-xs max-w-md mx-auto">
-            <div className="flex justify-between items-center py-1 border-b border-white/5">
-              <span className="text-slate-400">Ticket Reference:</span>
-              <span className="font-bold text-emerald-400">{deliveryResult.ticketId}</span>
+          <div className="p-4 rounded-xl bg-slate-100 dark:bg-black/20 border border-slate-200 dark:border-white/10 text-left space-y-2 font-mono text-xs max-w-md mx-auto">
+            <div className="flex justify-between items-center py-1 border-b border-slate-200 dark:border-white/5">
+              <span className="text-slate-500 dark:text-slate-400">Ticket Reference:</span>
+              <span className="font-bold text-emerald-600 dark:text-emerald-400">{deliveryResult.ticketId}</span>
             </div>
-            <div className="flex justify-between items-center py-1 border-b border-white/5">
-              <span className="text-slate-400">Timestamp:</span>
-              <span className="text-slate-300">{new Date(deliveryResult.receivedAt).toLocaleTimeString()}</span>
+            <div className="flex justify-between items-center py-1 border-b border-slate-200 dark:border-white/5">
+              <span className="text-slate-500 dark:text-slate-400">Recipient Desk:</span>
+              <span className="font-bold text-slate-900 dark:text-slate-200">{deliveryResult.recipientEmail}</span>
+            </div>
+            <div className="flex justify-between items-center py-1 border-b border-slate-200 dark:border-white/5">
+              <span className="text-slate-500 dark:text-slate-400">Timestamp:</span>
+              <span className="text-slate-700 dark:text-slate-300">{new Date(deliveryResult.receivedAt).toLocaleTimeString()}</span>
             </div>
             <div className="flex justify-between items-center py-1">
-              <span className="text-slate-400">Target Desk:</span>
-              <span className="text-slate-300 capitalize">{category.replace('-', ' ')}</span>
+              <span className="text-slate-500 dark:text-slate-400">Topic:</span>
+              <span className="text-slate-700 dark:text-slate-300 capitalize">{category.replace('-', ' ')}</span>
             </div>
           </div>
 
-          <button
-            type="button"
-            onClick={resetForm}
-            className="px-6 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-semibold text-xs transition-all active:scale-95 inline-flex items-center gap-2"
-          >
-            <RefreshCw className="w-3.5 h-3.5" />
-            <span>Send Another Inquiry</span>
-          </button>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+            <a
+              href={deliveryResult.mailtoUrl}
+              className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition-all active:scale-95 inline-flex items-center justify-center gap-2 shadow-md"
+            >
+              <Mail className="w-3.5 h-3.5" />
+              <span>Open in Gmail App</span>
+            </a>
+            <button
+              type="button"
+              onClick={resetForm}
+              className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-slate-200 hover:bg-slate-300 dark:bg-white/10 dark:hover:bg-white/20 text-slate-800 dark:text-white font-semibold text-xs transition-all active:scale-95 inline-flex items-center justify-center gap-2"
+            >
+              <RefreshCw className="w-3.5 h-3.5" />
+              <span>Send Another Inquiry</span>
+            </button>
+          </div>
         </div>
       ) : (
         /* Contact Form with Validation & Spam Protection */
@@ -535,7 +595,7 @@ export const ContactPage: React.FC = () => {
           className="p-6 sm:p-8 rounded-2xl liquid-glass border border-slate-200 dark:border-slate-800 space-y-5 shadow-xl"
         >
           {errorMessage && (
-            <div className="p-3.5 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-xs flex items-center gap-2.5">
+            <div className="p-3.5 rounded-xl bg-red-500/10 border border-red-500/30 text-red-600 dark:text-red-400 text-xs flex items-center gap-2.5">
               <AlertTriangle className="w-4 h-4 flex-shrink-0" />
               <span>{errorMessage}</span>
             </div>
@@ -557,8 +617,8 @@ export const ContactPage: React.FC = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-400 mb-1.5 flex items-center gap-1.5">
-                <User className="w-3.5 h-3.5 text-emerald-400" />
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5 flex items-center gap-1.5">
+                <User className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
                 <span>Your Name *</span>
               </label>
               <input
@@ -568,13 +628,13 @@ export const ContactPage: React.FC = () => {
                 placeholder="e.g. Sarah Connor"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl liquid-glass border border-slate-300 dark:border-slate-700 text-xs sm:text-sm text-slate-100 placeholder:text-slate-500 focus:border-emerald-500 outline-none transition-colors"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-black/20 border border-slate-300 dark:border-slate-700 text-xs sm:text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:border-emerald-500 outline-none transition-colors"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-400 mb-1.5 flex items-center gap-1.5">
-                <Mail className="w-3.5 h-3.5 text-emerald-400" />
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5 flex items-center gap-1.5">
+                <Mail className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
                 <span>Email Address *</span>
               </label>
               <input
@@ -584,21 +644,21 @@ export const ContactPage: React.FC = () => {
                 placeholder="you@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl liquid-glass border border-slate-300 dark:border-slate-700 text-xs sm:text-sm text-slate-100 placeholder:text-slate-500 focus:border-emerald-500 outline-none transition-colors"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-black/20 border border-slate-300 dark:border-slate-700 text-xs sm:text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:border-emerald-500 outline-none transition-colors"
               />
             </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-400 mb-1.5 flex items-center gap-1.5">
-                <Tag className="w-3.5 h-3.5 text-emerald-400" />
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5 flex items-center gap-1.5">
+                <Tag className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
                 <span>Topic Category</span>
               </label>
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl liquid-glass border border-slate-300 dark:border-slate-700 text-xs sm:text-sm text-slate-100 bg-[#0c1410] focus:border-emerald-500 outline-none transition-colors"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-[#0c1410] border border-slate-300 dark:border-slate-700 text-xs sm:text-sm text-slate-900 dark:text-slate-100 focus:border-emerald-500 outline-none transition-colors"
               >
                 <option value="tool-request">New Tool Suggestion</option>
                 <option value="bug-report">Bug or Conversion Issue</option>
@@ -609,8 +669,8 @@ export const ContactPage: React.FC = () => {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-400 mb-1.5 flex items-center gap-1.5">
-                <Info className="w-3.5 h-3.5 text-emerald-400" />
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5 flex items-center gap-1.5">
+                <Info className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
                 <span>Subject (Optional)</span>
               </label>
               <input
@@ -619,15 +679,15 @@ export const ContactPage: React.FC = () => {
                 placeholder="Brief summary"
                 value={subject}
                 onChange={(e) => setSubject(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl liquid-glass border border-slate-300 dark:border-slate-700 text-xs sm:text-sm text-slate-100 placeholder:text-slate-500 focus:border-emerald-500 outline-none transition-colors"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-black/20 border border-slate-300 dark:border-slate-700 text-xs sm:text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:border-emerald-500 outline-none transition-colors"
               />
             </div>
           </div>
 
           <div>
             <div className="flex justify-between items-center mb-1.5">
-              <label className="block text-xs font-semibold text-slate-400 flex items-center gap-1.5">
-                <MessageSquare className="w-3.5 h-3.5 text-emerald-400" />
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+                <MessageSquare className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
                 <span>Detailed Message *</span>
               </label>
               <span className="text-[11px] text-slate-500">
@@ -641,7 +701,7 @@ export const ContactPage: React.FC = () => {
               placeholder="Describe your suggestion, tool requirements, or problem in detail..."
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-xl liquid-glass border border-slate-300 dark:border-slate-700 text-xs sm:text-sm text-slate-100 placeholder:text-slate-500 focus:border-emerald-500 outline-none transition-colors"
+              className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-black/20 border border-slate-300 dark:border-slate-700 text-xs sm:text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:border-emerald-500 outline-none transition-colors"
             />
           </div>
 
