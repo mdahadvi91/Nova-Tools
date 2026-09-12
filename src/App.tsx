@@ -215,18 +215,13 @@ const MainContent: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col relative text-slate-100 selection:bg-emerald-500 selection:text-white w-full max-w-full overflow-x-hidden">
-      {/* Background layer */}
+      {/* Website background */}
       <div
         aria-hidden="true"
-        className="fixed inset-0 pointer-events-none z-0 bg-cover bg-center bg-no-repeat bg-[#060b09]"
+        className="fixed inset-0 pointer-events-none z-0 bg-cover bg-center bg-no-repeat"
         style={{
           backgroundImage: "url('/assets/background.jpg')",
         }}
-      />
-
-      <div
-        aria-hidden="true"
-        className="fixed inset-0 app-bg-overlay pointer-events-none z-0"
       />
 
       <div className="relative z-10 flex flex-col min-h-screen w-full max-w-full overflow-x-hidden pt-14 sm:pt-16">
@@ -239,7 +234,6 @@ const MainContent: React.FC = () => {
         <SearchModal />
 
         <main className="flex-1 w-full max-w-7xl mx-auto px-2 sm:px-4 lg:px-8 py-3 sm:py-6 overflow-x-hidden">
-          {/* Router View */}
           {navState.view === 'home' && <HomePage />}
 
           {navState.view === 'category' && navState.category && (
