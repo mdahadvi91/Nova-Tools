@@ -4,7 +4,7 @@
  * AdSense Publisher: ca-pub-5216241068377334
  */
 
-export const GA_MEASUREMENT_ID = 'G-N4MHBT57FE';
+export const GA_MEASUREMENT_ID = 'G-NPEXBRERPT';
 export const ADSENSE_CLIENT_ID = 'ca-pub-5216241068377334';
 export const CONSENT_STORAGE_KEY = 'nova_consent_settings';
 
