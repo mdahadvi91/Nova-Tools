@@ -1,6 +1,6 @@
 /**
  * Nova Tools - Analytics & Google Consent Mode v2 Engine
- * GA4 Measurement ID: G-N4MHBT57FE
+ *  * GA4 Measurement ID: G-NPEXBRERPT
  * AdSense Publisher: ca-pub-5216241068377334
  */
 
