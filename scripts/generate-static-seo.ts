@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { generateSitemapXml, generateRobotsTxt } from '../src/lib/sitemapGenerator';
 
-const siteUrl = process.env.VITE_SITE_URL || process.env.SITE_URL || 'https://nova-tools.vercel.app';
+const siteUrl = process.env.VITE_SITE_URL || process.env.SITE_URL || 'https://nova-tools-hr.vercel.app';
 
 console.log(`Generating sitemap.xml and robots.txt for: ${siteUrl}`);
 
