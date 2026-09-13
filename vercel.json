@@ -8,7 +8,7 @@
   "rewrites": [
     {
       "source": "/((?!api/|assets/|favicon\\.ico|favicon\\.svg|site\\.webmanifest|robots\\.txt|sitemap\\.xml|ads\\.txt).*)",
-      "destination": "/index.html"
+      "destination": "/index"
     }
   ],
   "headers": [
