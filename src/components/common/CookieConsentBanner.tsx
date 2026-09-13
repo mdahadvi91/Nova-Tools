@@ -99,7 +99,7 @@ export const CookieConsentBanner: React.FC = () => {
       ? 'আমরা আপনার গোপনীয়তাকে সর্বোচ্চ গুরুত্ব দিই। আপনার ফাইল বা ডেটা কখনো আমাদের সার্ভারে জমা হয় না। সাইটের কার্যক্ষমতা পরিমাপ (GA4) ও বিনামূল্যে টুলস প্রদান বজায় রাখতে (AdSense) সম্মতি প্রদান করুন। (EEA / UK / CH নির্দেশিকা অনুসারে)'
       : isAr
       ? 'نحن نحترم خصوصيتك تماماً. تعمل جميع أدواتنا داخل متصفحك دون رفع ملفاتك إلى خوادم خارجية. نستخدم تحليلات Google وإعلانات AdSense لدعم الأدوات المجانية وفقاً لمعايير الخصوصية الأوروبية (GDPR).'
-      : 'We value your digital privacy. All tools operate 100% client-side in your browser with zero file uploads. We use Google Analytics 4 (G-N4MHBT57FE) and Google AdSense (ca-pub-5216241068377334) to maintain free utilities in compliance with EEA, UK, and Swiss GDPR directives.',
+      : 'We value your digital privacy. All tools operate 100% client-side in your browser with zero file uploads. We use Google Analytics 4 (G-NPEXBRERPT) and Google AdSense (ca-pub-5216241068377334) to maintain free utilities in compliance with EEA, UK, and Swiss GDPR directives.',
     acceptAll: isBn ? 'সব অনুমোদন করুন' : isAr ? 'قبول الكل' : 'Accept All',
     rejectNonEssential: isBn ? 'শুধুমাত্র প্রয়োজনীয়' : isAr ? 'رفض غير الضرورية' : 'Reject Non-Essential',
     customize: isBn ? 'পছন্দ কাস্টমাইজ করুন' : isAr ? 'تخصيص الخيارات' : 'Customize Preferences',
